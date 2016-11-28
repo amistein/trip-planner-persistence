@@ -52,7 +52,13 @@ var tripModule = (function () {
     if (days.length === 1) {
       currentDay = newDay;
     }
+
+    $.post(`/api/days/${days.length}`)
+    .then(() => console.log("Day created"))
+    .catch(console.error);
+
     switchTo(newDay);
+
   }
 
   function deleteCurrentDay () {
@@ -75,7 +81,12 @@ var tripModule = (function () {
   var publicAPI = {
 
     load: function () {
-      $(addDay);
+      $.get('/api/days')
+      .then((days) => {
+        if (days.length === 0) {
+          $(addDay);
+        }
+      })
     },
 
     switchTo: switchTo,
