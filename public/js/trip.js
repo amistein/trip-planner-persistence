@@ -65,14 +65,18 @@ var tripModule = (function () {
     // prevent deleting last day
     if (days.length < 2 || !currentDay) return;
     // remove from the collection
-    var index = days.indexOf(currentDay),
-      previousDay = days.splice(index, 1)[0],
-      newCurrent = days[index] || days[index - 1];
-    // fix the remaining day numbers
-    days.forEach(function (day, i) {
-      day.setNumber(i + 1);
+    // var index = days.indexOf(currentDay),
+    //   previousDay = days.splice(index, 1)[0],
+    //   newCurrent = days[index] || days[index - 1];
+    // // fix the remaining day numbers
+    // days.forEach(function (day, i) {
+    //   day.setNumber(i + 1);
+    // });
+    $.ajax({
+      method: 'DELETE', 
+      url: `/api/days/${days.indexOf(currentDay)}`
     });
-    switchTo(newCurrent);
+    // switchTo(newCurrent);
     previousDay.hideButton();
   }
 
@@ -82,9 +86,11 @@ var tripModule = (function () {
 
     load: function () {
       $.get('/api/days')
-      .then((days) => {
-        if (days.length === 0) {
+      .then((foundDays) => {
+        if (foundDays.length === 0) {
           $(addDay);
+        } else {
+          days = foundDays.map(dayModule.create);
         }
       })
     },

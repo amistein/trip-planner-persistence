@@ -28,7 +28,7 @@ router.get('/:id', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
   Day.destroy({
     where: {
-      id: req.params.id
+      number: req.params.id
     }
   })
   .then(day => res.send("Deleted!"))

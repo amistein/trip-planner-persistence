@@ -12,11 +12,23 @@ const Day = db.define('day', {
     type: Sequelize.INTEGER,
     allowNull: false
   }
-// },
-// {
-//   getterMethods: {
-//     createDayObj: function() { return createDay(this)}
-//   }
+},
+{
+  hooks: {
+    afterDestroy: function(day) {
+      Day.findAll({
+        where: {number: {
+            $gt: day.number
+          }
+        }
+      })
+      .then((foundDays) => {
+        foundDays.forEach((day) => {
+          day.decrement('number', {by: 1});
+        })
+      })
+    }
+  }
 });
 
 Day.belongsTo(Hotel);
